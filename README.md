@@ -9,4 +9,16 @@ python bindings for [MOOS](https://github.com/themoos/core-moos)
 |Windows  |[![Build status](https://ci.appveyor.com/api/projects/status/ad0jwpij0xhikh5f?svg=true)](https://ci.appveyor.com/project/msis/python-moos)|
 
 # Build Instructions
-(TODO, for now please refer to the `.travis.yml` file for Linux/OSX and `appveyor.yml` file for Windows.)
+Clone the repository:
+
+```
+git clone https://github.com/msis/python-moos.git python-moos
+```
+
+Build and install python-moos:
+
+```
+cd python-moos
+python setup.py build
+python setup.py install
+```
