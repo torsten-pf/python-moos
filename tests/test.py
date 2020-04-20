@@ -242,7 +242,7 @@ class pyMOOSTestCase(unittest.TestCase):
     def test_32_on_mail_callback(self):
         logger.debug(' on ')
         c = pymoos.comms()
-        received_mail = False
+        self.received_mail = False
 
         def on_connect():
             logger.debug(' on ')
@@ -251,12 +251,11 @@ class pyMOOSTestCase(unittest.TestCase):
 
         def on_new_mail():
             logger.debug(' on ')
-            nonlocal received_mail
             for msg in c.fetch():
                 logger.debug(' one new mail ')
                 self.assertTrue(msg.is_name('TEST_CALLBACK_ONMAIL_VAR'))
                 self.assertEqual(msg.double(), 1)
-                received_mail = True
+                self.received_mail = True
                 logger.debug(' mail processed ')
             return True
 
@@ -268,22 +267,22 @@ class pyMOOSTestCase(unittest.TestCase):
         time.sleep(1)
 
         self.assertTrue(c.is_registered_for('TEST_CALLBACK_ONMAIL_VAR'))
-        self.assertFalse(received_mail)
+        self.assertFalse(self.received_mail)
         self.assertTrue(c.notify('TEST_CALLBACK_ONMAIL_VAR', 1, -1))
 
         time.sleep(1)
 
-        self.assertTrue(received_mail)
+        self.assertTrue(self.received_mail)
 
         c.close(True)
 
     def test_33_on_mail_active_queues(self):
         logger.debug(' on ')
         c = pymoos.comms()
-        received_mail = False
-        received_mail_q_v1 = False
-        received_mail_q_v2 = False
-        received_mail_q2_v = False
+        self.received_mail = False
+        self.received_mail_q_v1 = False
+        self.received_mail_q_v2 = False
+        self.received_mail_q2_v = False
 
         def on_connect():
             logger.debug(' on ')
@@ -295,32 +294,29 @@ class pyMOOSTestCase(unittest.TestCase):
 
         def on_new_mail_aq():
             logger.debug(' on ')
-            nonlocal received_mail
             for msg in c.fetch():
                 logger.debug(' one new mail = ' + msg.key())
                 # self.assertTrue(msg.is_name('TEST_ONMAIL_ACTIVE_Q'))
                 # self.assertEqual(msg.double(), 1)
-                received_mail = True
+                self.received_mail = True
                 logger.debug(' mail processed')
             return True
 
         def queue1(msg):
             logger.debug(' on ')
-            nonlocal received_mail_q_v1, received_mail_q_v2
             if msg.is_name('TEST_ONQUEUE_VAR1'):
                 self.assertEqual(msg.double(), 2)
-                received_mail_q_v1 = True
+                self.received_mail_q_v1 = True
             elif msg.is_name('TEST_ONQUEUE_VAR2'):
                 self.assertEqual(msg.double(), 3)
-                received_mail_q_v2 = True
+                self.received_mail_q_v2 = True
             return True
 
         def queue2(msg):
             logger.debug(' on ')
-            nonlocal received_mail_q2_v
             if msg.is_name('TEST_ONQUEUE2_VAR'):
                 self.assertEqual(msg.double(), 4)
-                received_mail_q2_v = True
+                self.received_mail_q2_v = True
             return True
 
 
@@ -341,10 +337,10 @@ class pyMOOSTestCase(unittest.TestCase):
         self.assertTrue(c.is_registered_for('TEST_ONQUEUE_VAR1'))
         self.assertTrue(c.is_registered_for('TEST_ONQUEUE_VAR2'))
         self.assertTrue(c.is_registered_for('TEST_ONQUEUE2_VAR'))
-        self.assertFalse(received_mail)
-        self.assertFalse(received_mail_q_v1)
-        self.assertFalse(received_mail_q_v2)
-        self.assertFalse(received_mail_q2_v)
+        self.assertFalse(self.received_mail)
+        self.assertFalse(self.received_mail_q_v1)
+        self.assertFalse(self.received_mail_q_v2)
+        self.assertFalse(self.received_mail_q2_v)
         self.assertTrue(c.notify('TEST_ONMAIL_ACTIVE_Q', 1))
         self.assertTrue(c.notify('TEST_ONQUEUE_VAR1', 2))
         self.assertTrue(c.notify('TEST_ONQUEUE_VAR2', 3))
@@ -352,10 +348,10 @@ class pyMOOSTestCase(unittest.TestCase):
 
         time.sleep(1)
 
-        self.assertTrue(received_mail)
-        self.assertTrue(received_mail_q_v1)
-        self.assertTrue(received_mail_q_v2)
-        self.assertTrue(received_mail_q2_v)
+        self.assertTrue(self.received_mail)
+        self.assertTrue(self.received_mail_q_v1)
+        self.assertTrue(self.received_mail_q_v2)
+        self.assertTrue(self.received_mail_q2_v)
 
         c.close(True)
 
