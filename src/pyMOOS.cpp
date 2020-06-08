@@ -216,9 +216,8 @@ private:
 ;//namesapce
 
 
-PYBIND11_PLUGIN(pymoos)
-{
-    py::module m("pymoos", "python wrapping for MOOS.");
+PYBIND11_MODULE(pymoos, m) {
+    m.doc() = "python wrapper for MOOS";
 
     PyEval_InitThreads();
 
@@ -540,7 +539,4 @@ PYBIND11_PLUGIN(pymoos)
             PyErr_SetString(PyExc_RuntimeError, e.what());
         }
     });
-
-
-    return m.ptr();
 }

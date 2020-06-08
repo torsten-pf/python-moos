@@ -4,6 +4,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/pybind11/badge/?version=master)](http://pybind11.readthedocs.org/en/master/?badge=master)
 [![Documentation Status](https://readthedocs.org/projects/pybind11/badge/?version=stable)](http://pybind11.readthedocs.org/en/stable/?badge=stable)
+[![Gitter chat](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/pybind/Lobby)
 [![Build Status](https://travis-ci.org/pybind/pybind11.svg?branch=master)](https://travis-ci.org/pybind/pybind11)
 [![Build status](https://ci.appveyor.com/api/projects/status/riaj54pn4h08xy40?svg=true)](https://ci.appveyor.com/project/wjakob/pybind11)
 
@@ -24,12 +25,12 @@ become an excessively large and unnecessary dependency.
 
 Think of this library as a tiny self-contained version of Boost.Python with
 everything stripped away that isn't relevant for binding generation. Without
-comments, the core header files only require ~2.5K lines of code and depend on
-Python (2.7 or 3.x) and the C++ standard library. This compact implementation
-was possible thanks to some of the new C++11 language features (specifically:
-tuples, lambda functions and variadic templates). Since its creation, this
-library has grown beyond Boost.Python in many ways, leading to dramatically
-simpler binding code in many common situations.
+comments, the core header files only require ~4K lines of code and depend on
+Python (2.7 or 3.x, or PyPy2.7 >= 5.7) and the C++ standard library. This
+compact implementation was possible thanks to some of the new C++11 language
+features (specifically: tuples, lambda functions and variadic templates). Since
+its creation, this library has grown beyond Boost.Python in many ways, leading
+to dramatically simpler binding code in many common situations.
 
 Tutorial and reference documentation is provided at
 [http://pybind11.readthedocs.org/en/master](http://pybind11.readthedocs.org/en/master).
@@ -50,7 +51,6 @@ pybind11 can map the following core C++ features to Python
 - Custom operators
 - Single and multiple inheritance
 - STL data structures
-- Iterators and ranges
 - Smart pointers with reference counting like ``std::shared_ptr``
 - Internal references with correct reference counting
 - C++ classes with virtual (and pure virtual) methods can be extended in Python
@@ -58,11 +58,14 @@ pybind11 can map the following core C++ features to Python
 ## Goodies
 In addition to the core functionality, pybind11 provides some extra goodies:
 
-- pybind11 uses C++11 move constructors and move assignment operators whenever
-  possible to efficiently transfer custom data types.
+- Python 2.7, 3.x, and PyPy (PyPy2.7 >= 5.7) are supported with an
+  implementation-agnostic interface.
 
 - It is possible to bind C++11 lambda functions with captured variables. The
   lambda capture data is stored inside the resulting Python function object.
+
+- pybind11 uses C++11 move constructors and move assignment operators whenever
+  possible to efficiently transfer custom data types.
 
 - It's easy to expose the internal storage of custom data types through
   Pythons' buffer protocols. This is handy e.g. for fast conversion between
@@ -83,26 +86,26 @@ In addition to the core functionality, pybind11 provides some extra goodies:
   [reported](http://graylab.jhu.edu/RosettaCon2016/PyRosetta-4.pdf) a binary
   size reduction of **5.4x** and compile time reduction by **5.8x**.
 
-- When supported by the compiler, two new C++14 features (relaxed constexpr and
-  return value deduction) are used to precompute function signatures at compile
-  time, leading to smaller binaries.
+- Function signatures are precomputed at compile time (using ``constexpr``),
+  leading to smaller binaries.
 
 - With little extra effort, C++ types can be pickled and unpickled similar to
   regular Python objects.
 
 ## Supported compilers
 
-1. Clang/LLVM (any non-ancient version with C++11 support)
-2. GCC (any non-ancient version with C++11 support)
-3. Microsoft Visual Studio 2015 or newer
-4. Intel C++ compiler 16 or newer (15 with a [workaround](https://github.com/pybind/pybind11/issues/276))
+1. Clang/LLVM 3.3 or newer (for Apple Xcode's clang, this is 5.0.0 or newer)
+2. GCC 4.8 or newer
+3. Microsoft Visual Studio 2015 Update 3 or newer
+4. Intel C++ compiler 17 or newer (16 with pybind11 v2.0 and 15 with pybind11 v2.0 and a [workaround](https://github.com/pybind/pybind11/issues/276))
 5. Cygwin/GCC (tested on 2.5.1)
 
 ## About
 
-This project was created by [Wenzel Jakob](https://www.mitsuba-renderer.org/~wenzel/).
+This project was created by [Wenzel Jakob](http://rgl.epfl.ch/people/wjakob).
 Significant features and/or improvements to the code were contributed by
 Jonas Adler,
+Lori A. Burns,
 Sylvain Corlay,
 Trent Houliston,
 Axel Huebl,
@@ -114,8 +117,10 @@ Dean Moldovan,
 Ben Pritchard,
 Jason Rhinelander,
 Boris Schäling,
-Pim Schellart, and
-Ivan Smirnov.
+Pim Schellart,
+Henry Schreiner,
+Ivan Smirnov, and
+Patrick Stewart.
 
 ### License
 
