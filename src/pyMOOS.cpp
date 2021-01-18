@@ -215,7 +215,6 @@ private:
 }
 ;//namesapce
 
-
 PYBIND11_MODULE(pymoos, m) {
     m.doc() = "python wrapper for MOOS";
 
@@ -258,8 +257,8 @@ PYBIND11_MODULE(pymoos, m) {
 
         .def("is_binary", &CMOOSMsg::IsBinary, "Check if data type is "
                       "binary.")
-        .def("binary_data",&CMOOSMsg::GetString, "Return string value (here"
-                      " in binary) of the message.")
+        .def("binary_data", [](CMOOSMsg& msg) {return py::bytes(msg.GetString());},
+            "Return string value (as a bytes object) of the message.")
         .def("binary_data_size",&CMOOSMsg::GetBinaryDataSize, "Return size"
                       " of binary message (0 if not binary type)/")
         .def("mark_as_binary",&CMOOSMsg::MarkAsBinary, "Mark string payload"
