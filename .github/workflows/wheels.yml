@@ -5,7 +5,7 @@ on:
   pull_request:
   push:
     branches:
-     - ci-actions
+     - master
   release:
     types:
       - published
