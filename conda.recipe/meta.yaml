@@ -1,6 +1,6 @@
 package:
   name: pymoos
-  version: '2020.1'
+  version: '2021.1'
 
 source:
   path: ..
