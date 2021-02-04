@@ -70,7 +70,7 @@ public:
         return pMe->on_connect();
     }
     bool SetOnConnectCallback(py::object func) {
-        BASE: SetOnConnectCallBack(on_connect_delegate, this);
+        BASE::SetOnConnectCallBack(on_connect_delegate, this);
         on_connect_object_ = func;
         return true;
     }
@@ -111,7 +111,7 @@ public:
     }
 
     bool SetOnMailCallback(py::object func) {
-        BASE: SetOnMailCallBack(on_mail_delegate, this);
+        BASE::SetOnMailCallBack(on_mail_delegate, this);
         on_mail_object_ = func;
         return true;
     }
