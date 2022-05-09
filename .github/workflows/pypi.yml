@@ -1,0 +1,28 @@
+name: Publish Release to PyPi
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+jobs:
+  upload_all:
+    name: Upload to PyPi
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+
+    steps:
+    - uses: actions/setup-python@v2
+
+    - uses: dsaltares/fetch-gh-release-asset@master
+      with:
+        version: "${{ github.event.release.id }}"
+        regex: true
+        file: ".*\\.whl"
+        target: "dist/"
+
+    - uses: pypa/gh-action-pypi-publish@v1.4.1
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_password }}

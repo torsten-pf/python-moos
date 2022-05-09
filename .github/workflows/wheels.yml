@@ -6,9 +6,6 @@ on:
   push:
     branches:
      - master
-  release:
-    types:
-      - published
 
 env:
   CIBW_TEST_COMMAND: python {project}/tests/test.py
@@ -33,6 +30,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
+        name: sdist
         path: dist/*.tar.gz
 
 
@@ -137,6 +135,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
+        name: wheels
         path: wheelhouse/*.whl
 
 
@@ -190,22 +189,30 @@ jobs:
   #     with:
   #       path: wheelhouse/*.whl
 
-
-  upload_all:
-    name: Upload if release
-    needs: [build_wheels, build_sdist] #build_win27_wheels
+  release:
+    needs: ['build_wheels', 'build_sdist']
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
-
+    if: github.ref == 'refs/heads/master'
     steps:
-    - uses: actions/setup-python@v2
-
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
-        name: artifact
+        name: wheels
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@v1.4.1
+    - uses: actions/download-artifact@v3
       with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}
+        name: sdist
+        path: dist
+
+    - name: Create Release
+      id: create_release
+      uses: "marvinpinto/action-automatic-releases@v1.2.1"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        draft: true
+        prerelease: false
+        title: pymoos TAG HERE
+        files: |
+          dist/*.whl
+          dist/*.tar.gz
