@@ -108,6 +108,7 @@ jobs:
           make install;
           popd >& /dev/null;
         CIBW_SKIP: pp*
+        CIBW_TEST_SKIP: "*"
         # CIBW_TEST_COMMAND: python {project}/tests/test.py
 
     - name: Build MacOS Wheels
@@ -115,6 +116,7 @@ jobs:
       if: matrix.os == 'macos-latest'
       env:
         CIBW_SKIP: pp*
+        CIBW_TEST_SKIP: "*"
         # CIBW_TEST_COMMAND: python {project}/tests/test.py
 
     - name: Show files
