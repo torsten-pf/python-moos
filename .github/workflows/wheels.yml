@@ -7,10 +7,6 @@ on:
     branches:
      - master
 
-env:
-  CIBW_TEST_COMMAND: python {project}/tests/test.py
-
-
 jobs:
   build_sdist:
     name: Build SDist
@@ -107,7 +103,6 @@ jobs:
           make install;
         CIBW_SKIP: pp*
         CIBW_TEST_SKIP: "*"
-        # CIBW_TEST_COMMAND: python {project}/tests/test.py
 
     - name: Build MacOS Wheels
       uses: pypa/cibuildwheel@v2.7.0
@@ -115,7 +110,6 @@ jobs:
       env:
         CIBW_SKIP: pp*
         CIBW_TEST_SKIP: "*"
-        # CIBW_TEST_COMMAND: python {project}/tests/test.py
 
     - name: Show files
       run: ls -lh wheelhouse
@@ -135,7 +129,7 @@ jobs:
   release:
     needs: ['build_wheels', 'build_sdist']
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
     - uses: actions/download-artifact@v3
       with:
@@ -147,6 +141,9 @@ jobs:
         name: sdist
         path: dist
 
+    - uses: olegtarasov/get-tag@v2.1
+      id: tagName
+
     - name: Create Release
       id: create_release
       uses: "marvinpinto/action-automatic-releases@v1.2.1"
@@ -155,7 +152,7 @@ jobs:
         automatic_release_tag: "latest"
         draft: true
         prerelease: false
-        title: pymoos TAG HERE
+        title: pymoos ${{ steps.tagName.outputs.tag }}
         files: |
           dist/*.whl
           dist/*.tar.gz

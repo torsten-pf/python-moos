@@ -1,6 +1,6 @@
 python-moos
 ===========
-Python (2.7 and 3) bindings for MOOS.
+Python bindings for MOOS.
 
 |      CI              | status |
 |----------------------|--------|
@@ -8,10 +8,9 @@ Python (2.7 and 3) bindings for MOOS.
 | pip builds           | [![Pip Actions Status][actions-pip-badge]][actions-pip-link] |
 | [`cibuildwheel`][]   | [![Wheels Actions Status][actions-wheels-badge]][actions-wheels-link] |
 
-[actions-badge]:           https://github.com/russkel/python-moos/workflows/Tests/badge.svg
-[actions-conda-link]:      https://github.com/russkel/python-moos/actions?query=workflow%3A%22Conda
+[actions-conda-link]:      https://github.com/russkel/python-moos/actions?query=workflow%3AConda
 [actions-conda-badge]:     https://github.com/russkel/python-moos/workflows/Conda/badge.svg
-[actions-pip-link]:        https://github.com/russkel/python-moos/actions?query=workflow%3A%22Pip
+[actions-pip-link]:        https://github.com/russkel/python-moos/actions?query=workflow%3APip
 [actions-pip-badge]:       https://github.com/russkel/python-moos/workflows/Pip/badge.svg
 [actions-wheels-link]:     https://github.com/russkel/python-moos/actions?query=workflow%3AWheels
 [actions-wheels-badge]:    https://github.com/russkel/python-moos/workflows/Wheels/badge.svg
