@@ -6,7 +6,7 @@ from pybind11 import get_cmake_dir
 
 import sys
 
-__version__ = "2021.1"
+__version__ = "2022.1"
 
 ext_modules = [
     Pybind11Extension("pymoos",
