@@ -56,7 +56,7 @@ jobs:
     - name: Checkout MOOS source
       uses: actions/checkout@v2
       with:
-        repository: 'themoos/core-moos'
+        repository: 'russkel/core-moos'
         path: '${{ github.workspace }}/core-moos'
 
     - name: 'Run CMake'
