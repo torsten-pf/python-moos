@@ -102,11 +102,9 @@ jobs:
         CIBW_ARCHS_LINUX: "auto aarch64"
         CIBW_BEFORE_ALL: |
           mkdir moosbuild;
-          pushd moosbuild >& /dev/null;
           cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON /project/core-moos/;
           make;
           make install;
-          popd >& /dev/null;
         CIBW_SKIP: pp*
         CIBW_TEST_SKIP: "*"
         # CIBW_TEST_COMMAND: python {project}/tests/test.py
