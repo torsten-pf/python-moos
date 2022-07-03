@@ -1,11 +1,9 @@
 name: Wheels
 
 on:
-  workflow_dispatch:
-  pull_request:
   push:
-    branches:
-     - master
+    tags:
+      - "**"
 
 jobs:
   build_sdist:
