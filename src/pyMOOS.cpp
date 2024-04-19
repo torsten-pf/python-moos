@@ -75,6 +75,17 @@ public:
         return true;
     }
 
+    static bool on_disconnect_delegate(void * pParam) {
+        MOOS::AsyncCommsWrapper * pMe =
+                static_cast<MOOS::AsyncCommsWrapper*> (pParam);
+        return pMe->on_disconnect();
+    }
+    bool SetOnDisconnectCallback(py::object func) {
+        BASE::SetOnDisconnectCallBack(on_disconnect_delegate, this);
+        on_disconnect_object_ = func;
+        return true;
+    }
+
     bool Close(bool nice){
         bool bResult = false;
 
@@ -102,6 +113,26 @@ public:
             PyGILState_Release(gstate);
             throw pyMOOSException(
                   "OnConnect:: caught an exception thrown in python callback");
+        }
+
+        PyGILState_Release(gstate);
+
+        return bResult;
+
+    }
+
+    bool on_disconnect() {
+
+        bool bResult = false;
+
+        PyGILState_STATE gstate = PyGILState_Ensure();
+        try {
+            py::object result = on_disconnect_object_();
+            bResult = py::bool_(result);
+        } catch (const py::error_already_set& e) {
+            PyGILState_Release(gstate);
+            throw pyMOOSException(
+                  "OnDisconnect:: caught an exception thrown in python callback");
         }
 
         PyGILState_Release(gstate);
@@ -207,6 +238,7 @@ private:
 
     /** callback functions (stored) */
     py::object on_connect_object_;
+    py::object on_disconnect_object_;
     py::object on_mail_object_;
 
     /** close connection flag */
@@ -460,21 +492,28 @@ PYBIND11_MODULE(pymoos, m) {
                     "Fetch incoming mail as a vector.")
         .def("set_on_connect_callback",
                     &MOOS::AsyncCommsWrapper::SetOnConnectCallback,
-                    "Set the user supplied on_connect callback. This callback, "
-                    "when set, will be invoked when a connection to the server "
-                    "is made. It is a good plan to register for notifications "
+                    "Set the user supplied on_connect callback. This callback,\n"
+                    "when set, will be invoked when a connection to the server\n"
+                    "is made. It is a good plan to register for notifications\n"
+                    "of variables in this callback.",
+                    py::arg("func"))
+        .def("set_on_disconnect_callback",
+                    &MOOS::AsyncCommsWrapper::SetOnDisconnectCallback,
+                    "Set the user supplied on_disconnect callback. This callback,\n"
+                    "when set, will be invoked when the connection to the server\n"
+                    "is lost. It is a good plan to register for notifications\n"
                     "of variables in this callback.",
                     py::arg("func"))
         .def("set_on_mail_callback",
                     &MOOS::AsyncCommsWrapper::SetOnMailCallback,
-                    "Set the user supplied on_mail callback. If you want rapid "
+                    "Set the user supplied on_mail callback. If you want rapid\n"
                     "response, use V10 active callbacks.",
                     py::arg("func"))
         .def("notify_binary", &MOOS::AsyncCommsWrapper::NotifyBinary,
                     "Notify binary data. (specific to pymoos.)",
                     py::arg("name"), py::arg("binary_data"), py::arg("time")=-1)
         .def("add_active_queue", &MOOS::AsyncCommsWrapper::AddActiveQueue,
-                    "Register a custom callback for a particular message."
+                    "Register a custom callback for a particular message.\n"
                     "This will be called in it's own thread.",
                     py::arg("queue_name"), py::arg("func"))
         .def("remove_message_route_to_active_queue",
