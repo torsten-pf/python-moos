@@ -63,6 +63,12 @@ public:
                    dfTime);
         return BASE::Post(M);
     }
+	/* do a MOOSDB server request */
+    bool ServerRequest(const std::string& sKey, double dfTime) {
+        CMOOSMsg M(MOOS_SERVER_REQUEST, sKey, dfTime);
+		M.m_sOriginatingCommunity = GetCommunityName();
+        return BASE::Post(M);
+    }
 
     static bool on_connect_delegate(void * pParam) {
         MOOS::AsyncCommsWrapper * pMe =
@@ -512,6 +518,9 @@ PYBIND11_MODULE(pymoos, m) {
         .def("notify_binary", &MOOS::AsyncCommsWrapper::NotifyBinary,
                     "Notify binary data. (specific to pymoos.)",
                     py::arg("name"), py::arg("binary_data"), py::arg("time")=-1)
+		.def("server_request", &MOOS::AsyncCommsWrapper::ServerRequest,
+                    "Do a MOOSDB server request. (specific to pymoos.)",
+                    py::arg("key"), py::arg("time")=-1)
         .def("add_active_queue", &MOOS::AsyncCommsWrapper::AddActiveQueue,
                     "Register a custom callback for a particular message.\n"
                     "This will be called in it's own thread.",
