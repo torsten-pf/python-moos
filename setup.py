@@ -1,16 +1,18 @@
 from setuptools import setup
 from pathlib import Path
-
-# Available at setup time due to pyproject.toml
-from pybind11.setup_helpers import Pybind11Extension, build_ext
-from pybind11 import get_cmake_dir
-
-import sys
+import sys, os
 
 __version__ = "2022.1"
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
+
+# append local pybind11 directory to find the required files
+sys.path.append(os.path.join(this_directory, 'pybind11'))
+
+# Available at setup time due to pyproject.toml (not working on older systems)
+from pybind11.setup_helpers import Pybind11Extension, build_ext
+from pybind11 import get_cmake_dir
 
 ext_modules = [
     Pybind11Extension("pymoos",
